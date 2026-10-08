@@ -1,0 +1,13 @@
+diff --git a/app/layout.tsx b/app/layout.tsx
+index 61d65ba..71b9041 100644
+--- a/app/layout.tsx
++++ b/app/layout.tsx
+@@ -11,7 +11,7 @@ const inter = Inter({
+ });
+ 
+ export const metadata: Metadata = {
+-  title: "AI Garage — Solvd",
++  title: "AI Garage — Solvd Agent Portal",
+   description:
+     "Solvd's internal portal for building, sharing, and shipping AI agents.",
+ };

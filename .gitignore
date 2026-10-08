@@ -3,3 +3,5 @@ _staging/
 .env.*
 !.env.example
 .DS_Store
+demos/*
+!demos/README.md

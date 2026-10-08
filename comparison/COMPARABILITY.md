@@ -135,7 +135,7 @@ The current record does not support claims about:
 - OpenHands E4 extensibility was not run.
 - OpenHands security, license, requirements-fit, matrix, and scorecard records are incomplete or absent.
 - The review controls differ materially and cannot support a reviewer ranking.
-- The OpenHands working evidence has not yet been committed to the evidence repository.
+- OpenHands evidence files E-OH-000 through E-OH-033 are present in this repository. This does not change the unscored status, the unrun E4 extensibility test, or missing judgment gates.
 
 No Cascade score or verdict change is proposed. No OpenHands score is entered here.
 

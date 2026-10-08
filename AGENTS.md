@@ -8,6 +8,6 @@
 ## Repo rules
 - Protocol: `METHODOLOGY.md` (v2). Track B rules: `tools/_shared/TRACK-B-RULES.md`.
 - Evidence is immutable; corrections are new IDs. Every score names its evidence.
-- Commit as `evaluator <evaluator@tool-evaluations.invalid>`. Run `scripts/precommit-check.sh` before every commit (`SCRUB_LIST` points at the external scrub list).
+- Commits in this repo are made by the evaluator under their own name. The tool under test commits to its target repo under a role identity. Run `scripts/precommit-check.sh` before every commit (`SCRUB_LIST` points at the external scrub list).
 - Never push to `main` of any target repo; draft PRs only; delete tool branches after evidence is captured.
 - No names of people, clients or accounts. No time estimates. No secrets in any file.

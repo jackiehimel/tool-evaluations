@@ -11,6 +11,15 @@ Evaluation records for AI development tooling: coding-agent orchestrators, cockp
 - `tools/<tool>/RESULTS.md` — the outcome per registered test, with evidence IDs, assistance given, cost, and what the evidence does and does not support.
 - `tools/_shared/tasks/` — the frozen tasks every tool gets, so results are comparable.
 
+## How an evaluation runs
+
+1. **Classify the tool.** Track A if it could run the whole development lifecycle; Track B if it is a specialist. Rules: `METHODOLOGY.md` §3 and `tools/_shared/TRACK-B-RULES.md`.
+2. **Register the procedure before running anything.** `tools/<tool>/PROCEDURE.md` lists each test, the exact command, what counts as pass, and the evidence file it will produce. The procedure is frozen once the run starts.
+3. **Run the tests on the frozen tasks** in `tools/_shared/tasks/`. Each test produces an evidence file in `tools/<tool>/evidence/`, named `E-<TOOL>-NNN-<slug>` and listed in `MANIFEST.md`. Evidence is never edited afterwards; a correction is a new file.
+4. **Audit before scoring.** A separate reviewer who did not run the tests reads only the proposed scores and the evidence folder and marks each row `supported`, `unsupported`, or `evidence-missing`. The audit result is itself an evidence file (`METHODOLOGY.md` §14).
+5. **Score at a gate.** A person enters scores at a `JUDGMENT REQUIRED` gate, after the audit. Track A gets the ten-stage matrix and a suitability verdict (§13). Track B gets an outcome per test (`Does it` / `Partly` / `Doesn't` / `Blocked` / `Not tested`) and no verdict.
+6. **Write `RESULTS.md` from the evidence.** Every claim carries an evidence ID. Cost and measured time are reported; assistance given to the tool is listed. What the evidence does not support is stated.
+
 ## Status
 
 | Tool | Track | Status |
@@ -25,6 +34,6 @@ Evaluation records for AI development tooling: coding-agent orchestrators, cockp
 
 - Evidence is collected first, then scored. Scores are never changed after the fact; a correction is a new evidence ID.
 - No time estimates. Measured time only.
-- No client names, no account names, no credentials. Role identities in commits.
+- No client names, no account names, no credentials. The tool under test commits to its target repo under a role identity, never as a person.
 - A test that was not run is `Not tested`, never `Does it` or `Doesn't`.
 - `scripts/precommit-check.sh` runs the scrub-list and secret checks before every commit.

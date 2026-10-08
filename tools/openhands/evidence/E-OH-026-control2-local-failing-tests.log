@@ -1,0 +1,91 @@
+start=2026-09-14T03:10:02Z
+
+> ai-garage-web@0.1.0 test
+> vitest run
+
+
+ RUN  v4.1.9 /private/tmp/adlc-e2-pr32.FNyfXc/repo
+
+ ❯ tests/changelog.test.ts (8 tests | 4 failed) 9ms
+     × combines updates from every agent into one feed, newest first 4ms
+     × orders same-day updates by agent name 1ms
+     × shows 'unknown' when an update is missing an author 0ms
+     × shows 'unknown' when an update's author is blank 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/changelog.test.ts > buildChangelogEntries > combines updates from every agent into one feed, newest first
+AssertionError: expected [ '2026-08-05', '2026-08-01' ] to deeply equal [ '2026-08-10', '2026-08-05', …(1) ]
+
+- Expected
++ Received
+
+  [
+-   "2026-08-10",
+    "2026-08-05",
+    "2026-08-01",
+  ]
+
+ ❯ tests/changelog.test.ts:48:48
+     46|
+     47|     const entries = buildChangelogEntries(agents);
+     48|     expect(entries.map((entry) => entry.date)).toEqual([
+       |                                                ^
+     49|       "2026-08-10",
+     50|       "2026-08-05",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/changelog.test.ts > buildChangelogEntries > orders same-day updates by agent name
+AssertionError: expected [ 'Zeta Agent' ] to deeply equal [ 'Alpha Agent', 'Zeta Agent' ]
+
+- Expected
++ Received
+
+  [
+-   "Alpha Agent",
+    "Zeta Agent",
+  ]
+
+ ❯ tests/changelog.test.ts:78:53
+     76|
+     77|     const entries = buildChangelogEntries(agents);
+     78|     expect(entries.map((entry) => entry.agentName)).toEqual([
+       |                                                     ^
+     79|       "Alpha Agent",
+     80|       "Zeta Agent",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/changelog.test.ts > buildChangelogEntries > shows 'unknown' when an update is missing an author
+TypeError: Cannot read properties of undefined (reading 'author')
+ ❯ tests/changelog.test.ts:94:23
+     92|
+     93|     const entries = buildChangelogEntries(agents);
+     94|     expect(entries[0].author).toBe("unknown");
+       |                       ^
+     95|   });
+     96|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/changelog.test.ts > buildChangelogEntries > shows 'unknown' when an update's author is blank
+TypeError: Cannot read properties of undefined (reading 'author')
+ ❯ tests/changelog.test.ts:107:23
+    105|
+    106|     const entries = buildChangelogEntries(agents);
+    107|     expect(entries[0].author).toBe("unknown");
+       |                       ^
+    108|   });
+    109| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed | 10 passed (11)
+      Tests  4 failed | 83 passed (87)
+   Start at  23:10:02
+   Duration  443ms (transform 468ms, setup 0ms, import 1.29s, tests 154ms, environment 1ms)
+
+exit_code=1
+end=2026-09-14T03:10:03Z

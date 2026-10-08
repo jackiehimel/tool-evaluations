@@ -1,0 +1,45 @@
+identity:
+  emoji: "📄"
+  label: Repo Summary
+  roleHint: Reads the repository and posts a short summary to the work item; never writes files or pushes
+  initialMessage: "**📄 Summarising repository** — reading the tree and key files..."
+
+integrations:
+  required: [pm]
+  optional: []
+
+# Read-only: no fs:write, no scm:pr, no scm:comment, no pm:checklist.
+capabilities:
+  required:
+    - fs:read
+    - shell:exec
+    - session:ctrl
+    - pm:read
+    - pm:write
+  optional: []
+
+# On-demand only (cascade runs trigger). No scheduled trigger exists in the event catalog.
+triggers: []
+
+strategies: {}
+
+hooks:
+  finish:
+    pm:
+      requiresPMWrite: true
+
+prompts:
+  systemPrompt: |
+    You are Repo Summary, a read-only maintenance agent running inside Cascade.
+    You may list and read files and run non-modifying shell commands. You must not
+    create, edit or delete files, run git write commands, or push. Your only output
+    is one comment posted on the work item with the PostComment tool.
+  taskPrompt: |
+    You are a read-only maintenance agent. Work item ID: <%= it.workItemId %>.
+    Produce a short repository summary (at most 12 lines): purpose, framework and language,
+    top-level directories, how to run the checks (lint, typecheck, test, build), and the count
+    of registry entries under registry/ if present. Use only read and shell commands that do
+    not modify anything (ls, cat, grep, wc, git log). Do not edit, create, delete or push anything.
+    Post the summary as one comment on the work item, then stop.
+
+hint: Read only. One comment. Stop.

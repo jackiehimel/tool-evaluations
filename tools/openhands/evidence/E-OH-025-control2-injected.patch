@@ -1,0 +1,13 @@
+diff --git a/lib/changelog.ts b/lib/changelog.ts
+index ce991c9..602eff3 100644
+--- a/lib/changelog.ts
++++ b/lib/changelog.ts
+@@ -47,7 +47,7 @@ export function buildChangelogEntries(agents: ChangelogSource[]): ChangelogEntry
+     const byDate = b.date.localeCompare(a.date);
+     if (byDate !== 0) return byDate;
+     return a.agentName.localeCompare(b.agentName);
+-  });
++  }).slice(1);
+ }
+ 
+ export function listChangelogEntries(): ChangelogEntry[] {

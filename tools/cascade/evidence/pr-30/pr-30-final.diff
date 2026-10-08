@@ -1,0 +1,21 @@
+diff --git a/lib/garage-content.ts b/lib/garage-content.ts
+index 3334e13..829f3b6 100644
+--- a/lib/garage-content.ts
++++ b/lib/garage-content.ts
+@@ -10,6 +10,16 @@ export const navGroups = [
+   },
+   {
+     title: "Explore",
++    // NOTE: "Changelog" (`{ href: "/changelog", label: "Changelog" }`) is intentionally
++    // omitted here until its dependencies land on `main`: the `/changelog` page
++    // (feature/changelog-page) and the `lib/changelog.ts` data feed
++    // (feature/changelog-data-feed). Adding it earlier ships a dead nav link on every
++    // page. Re-add directly after the "Backlog" entry once both branches merge.
++    // Tracking: https://trello.com/c/bzDu2nSL
++    // PR status: this file's diff against `main` is limited to this comment — the
++    // real nav entry was reverted pending the dependencies above (see PR #30 for
++    // the full review history; the PR title/description predate the revert and
++    // should be disregarded until a maintainer retitles/closes the PR).
+     links: [
+       { href: "/plan", label: "Plan" },
+       { href: "/library", label: "Library" },

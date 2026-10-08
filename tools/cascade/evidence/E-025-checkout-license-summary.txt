@@ -1,0 +1,13 @@
+├─ MIT: 293
+├─ Apache-2.0: 45
+├─ ISC: 28
+├─ BSD-3-Clause: 15
+├─ BlueOak-1.0.0: 4
+├─ Custom: https://www.npmjs.com/package/: 1
+├─ Custom: https://img.shields.io/badge/Node.js-18: 1
+├─ Python-2.0: 1
+├─ 0BSD: 1
+├─ Unlicense: 1
+├─ (MIT OR CC0-1.0): 1
+└─ UNKNOWN: 1
+

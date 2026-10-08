@@ -1,0 +1,266 @@
+From e4ca7369024ec862baa46c20b0bc1bdf520321c8 Mon Sep 17 00:00:00 2001
+From: openhands <openhands@all-hands.dev>
+Date: Sun, 13 Sep 2026 20:49:41 -0400
+Subject: [PATCH] Add a Changelog page
+
+Adds /changelog, listing every agent update in the registry as one
+combined feed (newest first, tie-broken by agent name), with a
+"Changelog" link in the portal nav.
+
+Co-authored-by: openhands <openhands@all-hands.dev>
+---
+ app/changelog/page.tsx  |  38 +++++++++++++
+ lib/changelog.ts        |  55 ++++++++++++++++++
+ lib/garage-content.ts   |   1 +
+ tests/changelog.test.ts | 123 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 217 insertions(+)
+ create mode 100644 app/changelog/page.tsx
+ create mode 100644 lib/changelog.ts
+ create mode 100644 tests/changelog.test.ts
+
+diff --git a/app/changelog/page.tsx b/app/changelog/page.tsx
+new file mode 100644
+index 0000000..9d9b749
+--- /dev/null
++++ b/app/changelog/page.tsx
+@@ -0,0 +1,38 @@
++import { listChangelogEntries } from "@/lib/changelog";
++
++export default function ChangelogPage() {
++  const entries = listChangelogEntries();
++
++  return (
++    <main className="page-wrap">
++      <h1 className="page-title">Changelog</h1>
++      <p className="page-subtitle">
++        Every logged update across the agent registry, newest first.
++      </p>
++
++      <section className="detail-block mt-8">
++        {entries.length === 0 ? (
++          <p className="m-0 text-[15px] text-[var(--ink-faint)]">
++            No updates yet.
++          </p>
++        ) : (
++          <ul className="m-0 list-none space-y-4 p-0">
++            {entries.map((entry, index) => (
++              <li
++                key={`${entry.agentId}-${entry.date}-${entry.author}-${index}`}
++                className="border-t border-[var(--rule-soft)] pt-4 first:border-t-0 first:pt-0"
++              >
++                <p className="m-0 text-[13.5px] font-medium text-[var(--ink-faint)]">
++                  {entry.date} · {entry.agentName} · {entry.author}
++                </p>
++                <p className="mb-0 mt-1 text-[15px] leading-6 text-[var(--ink-soft)]">
++                  {entry.note}
++                </p>
++              </li>
++            ))}
++          </ul>
++        )}
++      </section>
++    </main>
++  );
++}
+diff --git a/lib/changelog.ts b/lib/changelog.ts
+new file mode 100644
+index 0000000..ce991c9
+--- /dev/null
++++ b/lib/changelog.ts
+@@ -0,0 +1,55 @@
++import { agentLibrary, backlogAgents } from "./agent-registry";
++
++const UNKNOWN_AUTHOR = "unknown";
++
++/**
++ * Looser than `AgentUpdate` on purpose: the changelog feed is built by
++ * combining every agent in the registry, and it must stay resilient to an
++ * update entry that (for whatever reason) never got an author.
++ */
++export type ChangelogSourceUpdate = {
++  date: string;
++  author?: string;
++  note: string;
++};
++
++export type ChangelogSource = {
++  id: string;
++  title: string;
++  updates?: ChangelogSourceUpdate[];
++};
++
++export type ChangelogEntry = {
++  date: string;
++  agentId: string;
++  agentName: string;
++  author: string;
++  note: string;
++};
++
++/** Registry dates are ISO strings; the feed always shows the YYYY-MM-DD part. */
++export function formatChangelogDate(date: string): string {
++  return date.slice(0, 10);
++}
++
++export function buildChangelogEntries(agents: ChangelogSource[]): ChangelogEntry[] {
++  const entries: ChangelogEntry[] = agents.flatMap((agent) =>
++    (agent.updates ?? []).map((update) => ({
++      date: formatChangelogDate(update.date),
++      agentId: agent.id,
++      agentName: agent.title,
++      author: update.author?.trim() || UNKNOWN_AUTHOR,
++      note: update.note,
++    })),
++  );
++
++  return entries.sort((a, b) => {
++    const byDate = b.date.localeCompare(a.date);
++    if (byDate !== 0) return byDate;
++    return a.agentName.localeCompare(b.agentName);
++  });
++}
++
++export function listChangelogEntries(): ChangelogEntry[] {
++  return buildChangelogEntries([...agentLibrary, ...backlogAgents]);
++}
+diff --git a/lib/garage-content.ts b/lib/garage-content.ts
+index 3334e13..6c0f600 100644
+--- a/lib/garage-content.ts
++++ b/lib/garage-content.ts
+@@ -14,6 +14,7 @@ export const navGroups = [
+       { href: "/plan", label: "Plan" },
+       { href: "/library", label: "Library" },
+       { href: "/backlog", label: "Backlog" },
++      { href: "/changelog", label: "Changelog" },
+     ],
+   },
+   {
+diff --git a/tests/changelog.test.ts b/tests/changelog.test.ts
+new file mode 100644
+index 0000000..1ded077
+--- /dev/null
++++ b/tests/changelog.test.ts
+@@ -0,0 +1,123 @@
++import { describe, it, expect } from "vitest";
++import {
++  buildChangelogEntries,
++  formatChangelogDate,
++  listChangelogEntries,
++  type ChangelogSource,
++} from "@/lib/changelog";
++
++describe("formatChangelogDate", () => {
++  it("keeps a bare YYYY-MM-DD date as is", () => {
++    expect(formatChangelogDate("2026-08-07")).toBe("2026-08-07");
++  });
++
++  it("truncates a full ISO timestamp to YYYY-MM-DD", () => {
++    expect(formatChangelogDate("2026-08-07T15:04:05.000Z")).toBe(
++      "2026-08-07",
++    );
++  });
++});
++
++describe("buildChangelogEntries", () => {
++  it("skips an agent with no updates", () => {
++    const agents: ChangelogSource[] = [
++      { id: "quiet-agent", title: "Quiet Agent" },
++      { id: "empty-agent", title: "Empty Agent", updates: [] },
++    ];
++    expect(buildChangelogEntries(agents)).toEqual([]);
++  });
++
++  it("combines updates from every agent into one feed, newest first", () => {
++    const agents: ChangelogSource[] = [
++      {
++        id: "agent-a",
++        title: "Agent A",
++        updates: [
++          { date: "2026-08-01", author: "Ann", note: "Kickoff." },
++          { date: "2026-08-10", author: "Ann", note: "Shipped v1." },
++        ],
++      },
++      {
++        id: "agent-b",
++        title: "Agent B",
++        updates: [{ date: "2026-08-05", author: "Bo", note: "Claimed." }],
++      },
++    ];
++
++    const entries = buildChangelogEntries(agents);
++    expect(entries.map((entry) => entry.date)).toEqual([
++      "2026-08-10",
++      "2026-08-05",
++      "2026-08-01",
++    ]);
++    expect(entries[0]).toMatchObject({
++      agentId: "agent-a",
++      agentName: "Agent A",
++      author: "Ann",
++      note: "Shipped v1.",
++    });
++  });
++
++  it("orders same-day updates by agent name", () => {
++    const agents: ChangelogSource[] = [
++      {
++        id: "zeta-agent",
++        title: "Zeta Agent",
++        updates: [{ date: "2026-08-10", author: "Zed", note: "Zeta update." }],
++      },
++      {
++        id: "alpha-agent",
++        title: "Alpha Agent",
++        updates: [
++          { date: "2026-08-10", author: "Al", note: "Alpha update." },
++        ],
++      },
++    ];
++
++    const entries = buildChangelogEntries(agents);
++    expect(entries.map((entry) => entry.agentName)).toEqual([
++      "Alpha Agent",
++      "Zeta Agent",
++    ]);
++  });
++
++  it("shows 'unknown' when an update is missing an author", () => {
++    const agents: ChangelogSource[] = [
++      {
++        id: "agent-c",
++        title: "Agent C",
++        updates: [{ date: "2026-08-10", note: "No author given." }],
++      },
++    ];
++
++    const entries = buildChangelogEntries(agents);
++    expect(entries[0].author).toBe("unknown");
++  });
++
++  it("shows 'unknown' when an update's author is blank", () => {
++    const agents: ChangelogSource[] = [
++      {
++        id: "agent-d",
++        title: "Agent D",
++        updates: [{ date: "2026-08-10", author: "   ", note: "Blank author." }],
++      },
++    ];
++
++    const entries = buildChangelogEntries(agents);
++    expect(entries[0].author).toBe("unknown");
++  });
++});
++
++describe("listChangelogEntries", () => {
++  it("returns a feed sourced from the live registry", () => {
++    const entries = listChangelogEntries();
++    expect(Array.isArray(entries)).toBe(true);
++    entries.forEach((entry) => {
++      expect(entry.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
++      expect(entry.author.length).toBeGreaterThan(0);
++    });
++    for (let i = 1; i < entries.length; i += 1) {
++      expect(entries[i - 1].date >= entries[i].date).toBe(true);
++    }
++  });
++});

@@ -1,0 +1,25 @@
+{
+  "_captured_at": "2026-09-13T22:41-04:00",
+  "_redaction": "The author login matched the external scrub list and was replaced with a role token; no other field was altered.",
+  "_body_sha256": "a0b0b1fa9e61de90deeb73c1585108cb3ade79d35b3103146a70d7250fe092ea",
+  "_frozen_prompt_check": "The body is a byte-for-byte match with the two feature-prompt paragraphs of FEATURE.md section 9 (verified 2026-09-13T22:38-04:00).",
+  "issue": {
+    "author": {
+      "login": "[redacted-per-scrub-list: evaluator-owned account]"
+    },
+    "body": "Add a \"Changelog\" page to the site at `/changelog` that lists recent updates across all agents in the registry. Each agent's `updates[]` entries (date, author, note) should appear as one combined feed, newest first, showing the date, the agent's display name, the author and the note. Add a \"Changelog\" link to the portal nav. Follow the existing page and component patterns, use design tokens only, and keep the registry as the single source of truth.\n\nInclude unit tests for the data function. Handle these cases: an agent with no updates, two updates on the same date (order by agent name), and an update with a missing author (show \"unknown\"). Dates are ISO strings; display them as YYYY-MM-DD. The page must build and pass the full check suite.",
+    "createdAt": "2026-09-14T00:34:24Z",
+    "labels": [
+      {
+        "id": "LA_kwDOS00trc8AAAAC1iiHNQ",
+        "name": "openhands",
+        "description": "Queued for OpenHands implementation",
+        "color": "5319E7"
+      }
+    ],
+    "number": 31,
+    "state": "OPEN",
+    "title": "Add a Changelog page",
+    "updatedAt": "2026-09-14T00:46:14Z"
+  }
+}

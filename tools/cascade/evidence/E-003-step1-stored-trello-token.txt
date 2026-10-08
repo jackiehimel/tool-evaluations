@@ -1,0 +1,9 @@
+# E-003 — step 1: read-only test of the Trello token already stored in Cascade (2026-09-02T21:59:58Z = 17:59:58-04:00)
+# Method: `docker exec cascade-router-1 node` script importing dist/db/repositories/credentialsRepository.js, resolving TRELLO_API_KEY and TRELLO_TOKEN in memory; values never printed.
+stored key present: true len 32 | stored token present: true len 76
+GET /1/boards/{id} → HTTP 200
+board: adlc-comparisons closed: false shortLink: fnx9B5yF
+GET /lists → HTTP 200 Backlog 6a9770eb1c80929ac91f4724 | To Do 6a9740dea580e2eb7afd4b56 | Doing 6a9740dea580e2eb7afd4b57 | In Review 6a9770f8f644f059420c0f80 | Done 6a9740dea580e2eb7afd4b58
+GET /labels → HTTP 200 processed 6a97719b51b5dcbfa964728c | error 6a9771a06551baf32b152642 | (unnamed) 6a9740dea580e2eb7afd4b61 | (unnamed) 6a9740dea580e2eb7afd4b5c | processing 6a97719558a6505e07f669c3 | (unnamed) 6a9740dea580e2eb7afd4b5e | (unnamed) 6a9740dea580e2eb7afd4b60 | (unnamed) 6a9740dea580e2eb7afd4b5f | readyToProcess 6a97718cf1a279513a8aa266 | (unnamed) 6a9740dea580e2eb7afd4b5d
+GET /1/tokens/{token} → HTTP 200 {"id":"6a97442f741eba8374deb085","dateExpires":null,"dateCreated":"2026-09-01T21:31:27.822Z"}
+# Earlier corroboration: `webhooks list ai-garage` at ~17:00-04:00 (which calls GET /1/tokens/{token}/webhooks with the same stored token) returned the Trello hook.

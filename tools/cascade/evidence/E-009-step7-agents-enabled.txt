@@ -1,0 +1,41 @@
+# E-009 — Phase C step 7: agents enabled (2026-09-02T21:13:48 to 21:14-04:00)
+$ node bin/cascade.js agents create --project-id ai-garage --agent-type <t>   (×7, no model/engine override)
+✓ planning, splitting, backlog-manager, review, respond-to-review, respond-to-pr-comment, respond-to-ci
+$ node bin/cascade.js agents list --project-id ai-garage
+ID  Agent Type             Project    Model  Max Iter  Engine  Prompt
+4   backlog-manager        ai-garage                           -
+1   implementation         ai-garage                           -
+2   planning               ai-garage                           -
+8   respond-to-ci          ai-garage                           -
+7   respond-to-pr-comment  ai-garage                           -
+6   respond-to-review      ai-garage                           -
+5   review                 ai-garage                           -
+3   splitting              ai-garage                           -
+$ node bin/cascade.js projects trigger-set ai-garage --agent <a> --event <e> --enable   (×8, default parameters)
+$ node bin/cascade.js projects trigger-list ai-garage
+Agent                  Event                    Enabled  Parameters
+implementation         pm:status-changed        yes      -
+planning               pm:status-changed        yes      -          (targetStatus planning, onMove true, onCreate false — defaults)
+splitting              pm:status-changed        yes      -          (targetStatus splitting, onMove true — defaults)
+backlog-manager        pm:status-changed        yes      -          (Backlog / Merged card move, onMove true — defaults)
+backlog-manager        scm:pr-merged            yes      -
+review                 scm:check-suite-success  yes      -          (authorMode own — default)
+respond-to-review      scm:pr-review-submitted  yes      -
+respond-to-pr-comment  scm:pr-comment-mention   yes      -
+respond-to-ci          scm:check-suite-failure  yes      -          (authorMode own — default)
+Left disabled on purpose (D-20): planning/splitting pm:label-added (readyToProcess label — an "auto" style path); review scm:pr-opened and scm:review-requested (one review trigger only); backlog-manager internal:auto-chain (would feed a story to coding straight after splitting, before the evaluator approves the stories — decided at step 8).
+
+# Reviewer configuration (plan step 7)
+- Process: each run is its own worker container (`cascade-worker-<jobId>`), so the review runs as a separate process from the implementation run.
+- Identity: GitHub account `adlc-reviewer-bot` via the `reviewer_token` role → `GITHUB_TOKEN_REVIEWER` (`src/config/integrationRoles.ts:58`, `src/github/personas.ts:61,94`). Separate account from the implementer token's owner.
+- Model / engine: no override on the agent config → project model `claude-sonnet-5`, engine default `claude-code` (same as the implementer).
+- Trigger: `scm:check-suite-success`, authorMode `own` (reviews the tool's own PRs after CI passes).
+- Definition: builtin `review` — capabilities fs:read, shell:exec, session:ctrl, scm:read, scm:review, scm:comment (+ optional pm:read, pm:friction); no fs:write, no scm:pr; prompt says REVIEW ONLY.
+
+# Board prerequisite (2026-09-02T21:29:00 to 21:29:15-04:00, after "go")
+$ POST /1/lists  Planning → 200 id 6a98cd5dc2c4ddd01e3f4845 ; Splitting → 200 id 6a98cd5d82d82b44f241b4c4
+lists now: Backlog | To Do | Doing | In Review | Done | Planning | Splitting
+$ node bin/cascade.js projects integration-set ai-garage --category pm --provider trello --config '{…existing keys… + lists.planning, lists.splitting}'
+✓ Set pm/trello integration
+$ projects integrations ai-garage (parsed): list keys [backlog, inProgress, inReview, planning, splitting, todo]; label keys unchanged, no auto; scm triggers {}
+router config hash after step 7: d68281eef2f72202… (was bf8838d9… at baseline; expected change: 7 agent configs, 8 triggers, 2 list keys)

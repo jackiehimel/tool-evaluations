@@ -1,0 +1,31 @@
+@@ -28,5 +28,5 @@ export function buildChangelogFeed(agents: ChangelogSource[]): ChangelogEntry[]
+ }
+ 
+ export function listChangelogEntries(): ChangelogEntry[] {
+-  return buildChangelogFeed(backlogAgents).slice(1);
++  return buildChangelogFeed(backlogAgents);
+ }
+@@ -1,5 +1,6 @@
+ import { describe, it, expect } from "vitest";
+-import { buildChangelogFeed, type ChangelogSource } from "@/lib/changelog";
++import { buildChangelogFeed, listChangelogEntries, type ChangelogSource } from "@/lib/changelog";
++import { backlogAgents } from "@/lib/agent-registry";
+ 
+ describe("buildChangelogFeed", () => {
+   it("contributes zero entries for an agent with no updates", () => {
+@@ -93,3 +94,15 @@ describe("buildChangelogFeed", () => {
+     expect(feed[0].agentTitle).toBe("Agent X");
+   });
+ });
++
++describe("listChangelogEntries", () => {
++  it("returns the full combined feed from the real registry with no entries dropped", () => {
++    const expectedCount = backlogAgents.reduce(
++      (total, agent) => total + agent.updates.length,
++      0,
++    );
++    const entries = listChangelogEntries();
++    expect(entries).toHaveLength(expectedCount);
++    expect(entries).toEqual(buildChangelogFeed(backlogAgents));
++  });
++});

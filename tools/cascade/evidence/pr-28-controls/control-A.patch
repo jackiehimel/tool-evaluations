@@ -1,0 +1,22 @@
+@@ -45,6 +45,21 @@ describe("buildChangelogFeed", () => {
+     expect(feed.every((entry) => entry.author === "unknown")).toBe(true);
+   });
+ 
++  it("keeps two same-agent updates in date order", () => {
++    const agents: ChangelogSource[] = [
++      {
++        id: "agent-a",
++        title: "Agent A",
++        updates: [
++          { date: "2026-01-01", author: "Ana", note: "First" },
++          { date: "2026-02-01", author: "Ana", note: "Second" },
++        ],
++      },
++    ];
++    const feed = buildChangelogFeed(agents);
++    expect(feed.map((entry) => entry.note)).toEqual(["First", "Second"]);
++  });
++
+   it("orders entries newest-first across 3+ agents", () => {
+     const agents: ChangelogSource[] = [
+       {

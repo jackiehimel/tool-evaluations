@@ -1,0 +1,43 @@
+{
+  "checks": [
+    {
+      "completed_at": "2026-09-14T00:50:59Z",
+      "conclusion": "SUCCESS",
+      "name": "Lint, typecheck, test, build",
+      "started_at": "2026-09-14T00:50:05Z",
+      "status": "COMPLETED",
+      "type": "CheckRun"
+    },
+    {
+      "completed_at": null,
+      "conclusion": null,
+      "name": "Vercel",
+      "started_at": "2026-09-14T00:49:48Z",
+      "status": "FAILURE",
+      "type": "StatusContext"
+    },
+    {
+      "completed_at": "2026-09-14T00:50:06Z",
+      "conclusion": "SUCCESS",
+      "name": "Vercel Preview Comments",
+      "started_at": "2026-09-14T00:50:06Z",
+      "status": "COMPLETED",
+      "type": "CheckRun"
+    }
+  ],
+  "comment_summaries": [
+    {
+      "author_role": "hosting",
+      "contains_blocked_marker": true,
+      "contains_reviewing_marker": false,
+      "created_at": "2026-09-14T00:50:05Z"
+    },
+    {
+      "author_role": "separate-reviewer",
+      "contains_blocked_marker": false,
+      "contains_reviewing_marker": true,
+      "created_at": "2026-09-14T00:51:02Z"
+    }
+  ],
+  "review_count": 0
+}

@@ -1,0 +1,34 @@
+diff --git a/docs/architecture.md b/docs/architecture.md
+index 6bd2620..f698fd3 100644
+--- a/docs/architecture.md
++++ b/docs/architecture.md
+@@ -26,11 +26,12 @@ client components that call same-origin API routes.
+                  │  /library/[id]  /api/library/agents/[id]       │
+                  │  /backlog       /api/submissions/talk          │
+                  │  /plan                                        │
+-                 │  /espresso      lib/                          │
+-                 │  /roundtable    ├─ library-service.ts (shared)│
+-                 │  /submit        ├─ agent-library.ts (data)    │
+-                 │  /contact       ├─ garage-content.ts (content)│
+-                 │                 └─ talk-submission.ts (valid.) │
++                 │  /changelog     lib/                          │
++                 │  /espresso      ├─ library-service.ts (shared)│
++                 │  /roundtable    ├─ agent-library.ts (data)    │
++                 │  /submit        ├─ garage-content.ts (content)│
++                 │  /contact       ├─ talk-submission.ts (valid.) │
++                 │                 └─ changelog.ts (data)        │
+                  └───────────────┬──────────────────────────────┘
+                                  │ reads
+                  ┌───────────────▼──────────────────────────────┐
+diff --git a/lib/garage-content.ts b/lib/garage-content.ts
+index 3334e13..6c0f600 100644
+--- a/lib/garage-content.ts
++++ b/lib/garage-content.ts
+@@ -14,6 +14,7 @@ export const navGroups = [
+       { href: "/plan", label: "Plan" },
+       { href: "/library", label: "Library" },
+       { href: "/backlog", label: "Backlog" },
++      { href: "/changelog", label: "Changelog" },
+     ],
+   },
+   {

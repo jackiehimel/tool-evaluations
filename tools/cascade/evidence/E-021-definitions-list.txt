@@ -1,0 +1,14 @@
+Agent Type                   Label                       Emoji  Built-in
+───────────────────────────  ──────────────────────────  ─────  ────────
+alerting                     Alert Investigator          🚨     yes     
+backlog-manager              Backlog Manager             📦     yes     
+debug                        Debug Update                🐛     yes     
+implementation               Implementation Update       🧑‍💻  yes     
+planning                     Planning Update             🗺️    yes     
+resolve-conflicts            Conflict Resolution Update  🔀     yes     
+respond-to-ci                CI Fix Update               🔧     yes     
+respond-to-planning-comment  Planning Response Update    💬     yes     
+respond-to-pr-comment        PR Comment Response Update  💬     yes     
+respond-to-review            Review Response Update      🔧     yes     
+review                       Code Review Update          🔍     yes     
+splitting                    Splitting Update            📋     yes     

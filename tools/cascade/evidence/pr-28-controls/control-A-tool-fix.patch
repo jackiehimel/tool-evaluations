@@ -1,0 +1,18 @@
+@@ -45,7 +45,7 @@ describe("buildChangelogFeed", () => {
+     expect(feed.every((entry) => entry.author === "unknown")).toBe(true);
+   });
+ 
+-  it("keeps two same-agent updates in date order", () => {
++  it("orders two same-agent updates newest-first", () => {
+     const agents: ChangelogSource[] = [
+       {
+         id: "agent-a",
+@@ -57,7 +57,7 @@ describe("buildChangelogFeed", () => {
+       },
+     ];
+     const feed = buildChangelogFeed(agents);
+-    expect(feed.map((entry) => entry.note)).toEqual(["First", "Second"]);
++    expect(feed.map((entry) => entry.note)).toEqual(["Second", "First"]);
+   });
+ 
+   it("orders entries newest-first across 3+ agents", () => {

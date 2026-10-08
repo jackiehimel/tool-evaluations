@@ -1,0 +1,11 @@
+# E-002 — step 3: scratch-container dry run of the git identity the stock worker image uses (2026-09-02T17:05-04:00)
+# Method (DECISIONS.md D-6): docker run --rm --entrypoint sh cascade-worker:local; extract the exact config lines from the compiled module; git init; run them; empty commit; print author/committer.
+git: git version 2.39.5
+global user.name: [] user.email: []
+system user.name: [] user.email: []
+env GIT_AUTHOR_*: [] [] GIT_COMMITTER_*: [] []
+extracted from dist/utils/repo.js: git config user.name "Cascade Bot" ; git config user.email "bot@cascade.dev"
+commit author: Cascade Bot <bot@cascade.dev>  committer: Cascade Bot <bot@cascade.dev>
+# Static cross-check in both images: grep 'user.name\|user.email' /app/dist/utils/repo.js
+worker: 46: git config user.name "Cascade Bot" / 47: git config user.email "bot@cascade.dev"
+router: 46: git config user.name "Cascade Bot" / 47: git config user.email "bot@cascade.dev"

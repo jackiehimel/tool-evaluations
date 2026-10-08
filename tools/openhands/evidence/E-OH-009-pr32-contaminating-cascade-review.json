@@ -1,0 +1,8 @@
+{
+  "body": "## Summary\nLGTM — clean, well-scoped addition that follows existing conventions closely.\n\n## Notes\n- Verified `formatChangelogDate`/`buildChangelogEntries` sorting (date desc, then agent name asc) and the \"unknown\" author fallback logic in `lib/changelog.ts` — correct and well tested in `tests/changelog.test.ts`.\n- `ChangelogSource`/`ChangelogSourceUpdate` are intentionally looser than the registry's `AgentLibraryEntry`/`BacklogAgent`/`AgentUpdate` types (author required + non-empty there, enforced by `requireString` in `lib/agent-registry.ts`), so the \"unknown\" fallback path isn't reachable via the current registry loader today — but it's reasonable defensive/testable design given the comment explicitly calls this out, not a real bug.\n- Styling in `app/changelog/page.tsx` (page-wrap/page-title/page-subtitle/detail-block, list markup, Tailwind utility classes) mirrors the existing updates list in `app/backlog/[agentId]/page.tsx` almost line-for-line — good pattern reuse, no new one-off styles.\n- Nav link addition in `lib/garage-content.ts` is placed sensibly next to Plan/Library/Backlog.\n- Confirmed registry dates in `registry/agents/*.yaml` are bare `YYYY-MM-DD` today, so `formatChangelogDate` truncation is currently a no-op safety net rather than an active behavior change — fine either way.\n\nNo blocking or should-fix issues found.\n",
+  "commit_id": "e4ca7369024ec862baa46c20b0bc1bdf520321c8",
+  "id": "PRR_kwDOS00trc8AAAABNYdo-Q",
+  "state": "APPROVED",
+  "submitted_at": "2026-09-14T00:52:18Z",
+  "user": "adlc-reviewer-bot"
+}

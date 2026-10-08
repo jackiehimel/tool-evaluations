@@ -1,0 +1,55 @@
+{
+  "captured_sha": "c3c47f803aa8517f46f8c8e7f4771c0e2e126207",
+  "check_runs": [
+    {
+      "completed_at": "2026-09-14T02:43:44Z",
+      "conclusion": "success",
+      "details_url": "https://vercel.com/github",
+      "name": "Vercel Preview Comments",
+      "started_at": "2026-09-14T02:43:44Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-09-14T02:44:09Z",
+      "conclusion": "failure",
+      "details_url": "https://github.com/target-repository/actions/runs/34800151622/job/103841042456",
+      "name": "Lint, typecheck, test, build",
+      "started_at": "2026-09-14T02:43:23Z",
+      "status": "completed"
+    }
+  ],
+  "_workflow_run_id": 34800151622,
+  "_failed_job_log_excerpt": [
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:06.9746790Z  \u2713 tests/idea-submission.test.ts (3 tests) 4ms",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2788811Z  \u276f tests/eval-control-failing.test.ts (1 test | 1 failed) 8ms",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2793675Z      \u00d7 fails by design: asserts an incorrect date truncation 7ms",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2848379Z ",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2849646Z \u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2850212Z ",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2855071Z  FAIL  tests/eval-control-failing.test.ts > evaluation control (deliberately failing) > fails by design: asserts an incorrect date truncation",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2862239Z AssertionError: expected '2026-08-07' to be 'CONTROL-EXPECTED-FAILURE' // Object.is equality",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2863161Z ",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2870076Z Expected: \"CONTROL-EXPECTED-FAILURE\"",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2871186Z Received: \"2026-08-07\"",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2871912Z ",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2872633Z  \u276f tests/eval-control-failing.test.ts:10:61",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2893978Z       8| describe(\"evaluation control (deliberately failing)\", () => {",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2895993Z       9|   it(\"fails by design: asserts an incorrect date truncation\", () => {",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2897805Z      10|     expect(formatChangelogDate(\"2026-08-07T15:04:05.000Z\")).toBe(",
+    "--",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2903493Z  Test Files  1 failed | 11 passed (12)",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2905264Z      11|       \"CONTROL-EXPECTED-FAILURE\",",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2906373Z       Tests  1 failed | 87 passed (88)",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2922885Z      12|     );",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2923714Z    Start at  02:44:04",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2925565Z ",
+    "--",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2936063Z ",
+    "Lint, typecheck, test, build\tRun npm test\t2026-09-14T02:44:07.2967384Z ##[error]AssertionError: expected '2026-08-07' to be 'CONTROL-EXPECTED-FAILURE' // Object.is equality",
+    "Lint, typecheck, test, build\tRun npm test\t",
+    "Lint, typecheck, test, build\tRun npm test\tExpected: \"CONTROL-EXPECTED-FAILURE\"",
+    "Lint, typecheck, test, build\tRun npm test\tReceived: \"2026-08-07\"",
+    "Lint, typecheck, test, build\tRun npm test\t"
+  ],
+  "_note": "Repository identifiers redacted per the external scrub list. ANSI escapes removed from the excerpt."
+}

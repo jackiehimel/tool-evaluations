@@ -1,0 +1,7 @@
+@@ -28,5 +28,5 @@ export function buildChangelogFeed(agents: ChangelogSource[]): ChangelogEntry[]
+ }
+ 
+ export function listChangelogEntries(): ChangelogEntry[] {
+-  return buildChangelogFeed(backlogAgents);
++  return buildChangelogFeed(backlogAgents).slice(1);
+ }

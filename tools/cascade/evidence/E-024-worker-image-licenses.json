@@ -1,0 +1,35 @@
+{
+ "total": 353,
+ "summary": {
+  "SEE LICENSE IN README.md": 1,
+  "SEE LICENSE IN LICENSE.md": 1,
+  "MIT": 261,
+  "Apache-2.0": 43,
+  "ISC": 24,
+  "BSD-3-Clause": 15,
+  "Python-2.0": 1,
+  "BlueOak-1.0.0": 3,
+  "0BSD": 1,
+  "Unlicense": 1,
+  "(MIT OR CC0-1.0)": 1,
+  "UNKNOWN": 1
+ },
+ "nonpermissive": [
+  [
+   "@anthropic-ai/claude-agent-sdk@0.3.185",
+   "SEE LICENSE IN README.md"
+  ],
+  [
+   "@anthropic-ai/claude-agent-sdk-linux-arm64@0.3.185",
+   "SEE LICENSE IN LICENSE.md"
+  ],
+  [
+   "type-fest@0.21.3",
+   "(MIT OR CC0-1.0)"
+  ],
+  [
+   "zangief@1.0.5",
+   "UNKNOWN"
+  ]
+ ]
+}

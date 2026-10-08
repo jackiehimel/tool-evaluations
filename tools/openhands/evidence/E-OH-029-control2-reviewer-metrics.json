@@ -1,0 +1,20 @@
+{
+  "conversation_id": "a7228f98-d14e-405c-85d1-057947784a3a",
+  "status": "finished",
+  "created_at": "2026-09-14T03:13:16.728101Z",
+  "updated_at": "2026-09-14T03:15:04.956256Z",
+  "runtime_seconds": 108.228155,
+  "model": "anthropic/claude-sonnet-5",
+  "cost": 0.29776410000000003,
+  "prompt_tokens": 552983,
+  "completion_tokens": 9016,
+  "cache_read_tokens": 510618,
+  "cache_write_tokens": 41501,
+  "reasoning_tokens": 854,
+  "per_turn_tokens": 42121,
+  "model_turns": 22,
+  "latency_count": 22,
+  "latency_max_seconds": 10.659317016601562,
+  "latency_mean_seconds": 4.196801088073037,
+  "latency_total_seconds": 92.32962393760681
+}

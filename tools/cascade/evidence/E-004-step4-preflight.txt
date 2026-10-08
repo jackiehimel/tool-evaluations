@@ -1,0 +1,33 @@
+# E-004 — step 4 preflight, read-only checks (2026-09-02T19:11:40-04:00)
+$ curl -s http://localhost:3000/health
+{"status":"ok","role":"router","queue":{"waiting":0,"active":0,"completed":3,"failed":0},"activeWorkers":0,"workers":[]}
+$ curl -s http://localhost:4040/api/tunnels   (ngrok local API)
+tunnel: https://<tunnel-host>.ngrok-free.dev -> http://localhost:3000
+$ curl https://<tunnel-host>.ngrok-free.dev/health → HTTP 200
+$ node bin/cascade.js webhooks list ai-garage
+Trello webhooks:
+  [6a9779713a71c4e7f1e17474] https://<tunnel-host>.ngrok-free.dev/trello/webhook (active: true)
+GitHub webhooks:
+  [673360982] https://<tunnel-host>.ngrok-free.dev/github/webhook (active: true, events: check_suite, issue_comment, pull_request, pull_request_review, pull_request_review_comment)
+JIRA / Sentry / Linear: none
+$ node bin/cascade.js projects show ai-garage   (relevant rows)
+  Base Branch           main
+  Branch Prefix         feature/
+  Model                 claude-sonnet-5
+  Engine                —
+  Max In-Flight Items   —
+$ node bin/cascade.js projects integrations ai-garage   (parsed)
+scm Triggers: {}
+trello label keys: ['error', 'processed', 'processing', 'readyToProcess'] | auto present: False
+trello list keys: ['backlog', 'inProgress', 'inReview', 'todo']
+$ node bin/cascade.js projects trigger-list ai-garage
+implementation  pm:status-changed  yes      -
+$ engine default resolution (source at pinned commit)
+src/config/schema.ts:16       agentEngine: 'claude-code'   (PROJECT_DEFAULTS)
+src/backends/resolution.ts:3  export const DEFAULT_ENGINE = 'claude-code';
+src/backends/claude-code/models.ts:22  DEFAULT_CLAUDE_CODE_MODEL = 'claude-sonnet-5'
+$ board cards (router-container script, stored token, read-only)
+open cards: 2
+- [In Review] 6a97b17badb9b190f777703b "Add a site footer with Submit and Contact links" labels=[processed] last=2026-09-02T05:45:21.718Z
+- [Done] 6a9740f8734bfbf47e17e0bb "Change the AI Garage page title" labels=[processed] last=2026-09-02T18:53:38.272Z
+archived cards: 0

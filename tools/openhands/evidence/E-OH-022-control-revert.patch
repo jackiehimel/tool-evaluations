@@ -1,0 +1,20 @@
+diff --git a/tests/eval-control-failing.test.ts b/tests/eval-control-failing.test.ts
+deleted file mode 100644
+index d10f19a..0000000
+--- a/tests/eval-control-failing.test.ts
++++ /dev/null
+@@ -1,14 +0,0 @@
+-// EVALUATION CONTROL: deliberately failing unit test injected by the evaluator.
+-// This file is not part of the feature and will be reverted after the control
+-// observation. Its only purpose is to verify that the check pipeline reports
+-// a failing test on this pull request.
+-import { describe, it, expect } from "vitest";
+-import { formatChangelogDate } from "@/lib/changelog";
+-
+-describe("evaluation control (deliberately failing)", () => {
+-  it("fails by design: asserts an incorrect date truncation", () => {
+-    expect(formatChangelogDate("2026-08-07T15:04:05.000Z")).toBe(
+-      "CONTROL-EXPECTED-FAILURE",
+-    );
+-  });
+-});

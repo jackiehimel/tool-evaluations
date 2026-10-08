@@ -1,0 +1,24 @@
+# E-001 — step 3: stock tree and image ids (2026-09-02T16:40:15-04:00 to 16:55-04:00)
+$ git rev-parse HEAD
+aee88e203b08976a862e020df35b81f077f68ded
+$ git remote get-url origin
+https://github.com/mongrel-intelligence/cascade.git
+$ git status --porcelain | wc -l
+0
+$ src/utils/repo.ts:58-59 (after git restore)
+	execSync('git config user.name "Cascade Bot"', { cwd: targetDir, stdio: 'pipe' });
+	execSync('git config user.email "bot@cascade.dev"', { cwd: targetDir, stdio: 'pipe' });
+$ docker compose build worker router   (16:40:20 → 16:40:23, layer cache)
+ Image cascade-worker:local Built
+ Image cascade-router Built
+$ docker inspect cascade-worker:local
+Id=sha256:f8bd9ca82fb234725b68b839c85a603dc3019081ed3479d90c0407b730d8b706 RepoDigests=[cascade-worker@sha256:f8bd9ca82fb234725b68b839c85a603dc3019081ed3479d90c0407b730d8b706] Created=2026-09-01T23:10:53.843971671Z
+$ docker inspect cascade-router:latest
+router Id=sha256:53121d527bd04a8947d77b8ad9470adbc3f3f1ea6377d3eeb96cd66cb354756a
+(pre-reset ids, for the record: worker 456e2f711b23, router 43e6cb3ff0b0 — the Sep 1 patched builds)
+$ docker inspect cascade-router-1 --format '{{.Image}}'   (after docker compose up -d router, 16:40:46)
+sha256:53121d527bd04a8947d77b8ad9470adbc3f3f1ea6377d3eeb96cd66cb354756a
+$ curl -s http://localhost:3000/health   (16:41:22)
+{"status":"ok","role":"router","queue":{"waiting":0,"active":0,"completed":3,"failed":0},"activeWorkers":0,"workers":[]}
+$ curl -s -o /dev/null -w '%{http_code}' https://<tunnel>/health
+200

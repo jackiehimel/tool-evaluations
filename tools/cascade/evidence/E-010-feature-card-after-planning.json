@@ -1,0 +1,86 @@
+{
+  "list": "Planning",
+  "labels": [
+    "processed"
+  ],
+  "lastActivity": "2026-09-03T01:47:59.523Z",
+  "descChars": 8133,
+  "desc": "## 🎯 TLDR\n\n- **New data function `listChangelogEntries()`** in a new `lib/changelog.ts` — flattens every backlog agent's `updates[]` into one combined, sorted feed (newest first, agent name as tiebreaker), normalizing dates to `YYYY-MM-DD` and defaulting a missing author to `\"unknown\"`.\n- **New page `app/changelog/page.tsx`** — server component, follows the exact structure/tokens of `app/backlog/[agentId]/page.tsx`'s existing \"Updates\" section (same list/border pattern), just fed by the combined feed instead of a single agent.\n- **Nav link** added to `lib/garage-content.ts` `navGroups` (consumed by `components/portal-nav.tsx`) so `/changelog` shows up in the top nav automatically — no changes needed to `portal-nav.tsx` itself.\n- **Scope note:** today only backlog manifests (`scoped`/`claimed`/`in_build`) carry an `updates[]` array — `AgentLibraryEntry` (shipped/library) has no `updates` field at all (see `lib/agent-library.ts`). \"All agents in the registry\" therefore means all `backlogAgents` (the only agents with update history). This mirrors how `registry/agents/codebase-onboarding-agent.yaml` and `registry/agents/project-memory-agent.yaml` are the only manifests with non-empty `updates` today.\n\n---\n\n## 📋 Implementation Steps\n\n### Step 1: Add the `listChangelogEntries` data function\n**Files:** `lib/changelog.ts` (new)\n\n- Import `backlogAgents` and the `BacklogAgentManifest` type from `lib/agent-registry.ts` (same import style as `lib/library-service.ts`).\n- Define a `ChangelogEntry` type: `{ date: string; agentId: string; agentTitle: string; author: string; note: string }`.\n- Define a small `ChangelogSource` type (`Pick<BacklogAgentManifest, \"id\" | \"title\" | \"updates\">`) so the core function is decoupled from the live registry singleton and can be unit-tested with fixtures.\n- Export a pure function `buildChangelogFeed(agents: ChangelogSource[]): ChangelogEntry[]` that:\n  - `flatMap`s each agent's `updates[]` into `ChangelogEntry` objects.\n  - Formats `date` to `YYYY-MM-DD` via `update.date.slice(0, 10)` (safe whether the source string is already `YYYY-MM-DD` or a full ISO timestamp).\n  - Falls back to `\"unknown\"` when `author` is missing/blank: `update.author?.trim() || \"unknown\"` (guards against malformed data even though today's schema requires `author`; keeps the function robust and matches the requested test case).\n  - Sorts newest first: `b.date.localeCompare(a.date) || a.agentTitle.localeCompare(b.agentTitle)` — this gives newest-date-first ordering with same-date entries tiebroken by agent display name (per the card).\n- Export `listChangelogEntries(): ChangelogEntry[]` = `buildChangelogFeed(backlogAgents)` — this is what the page will call.\n\n### Step 2: Unit tests for the data function\n**Files:** `tests/changelog.test.ts` (new)\n\nFollow the existing test style in `tests/library-service.test.ts` / `tests/agent-registry.test.ts` (plain `describe`/`it`, fixture objects, no mocking of the filesystem). Test `buildChangelogFeed` directly with fixture `ChangelogSource[]` arrays so the suite doesn't depend on real registry contents drifting over time. Cover:\n- **No updates:** an agent with `updates: []` contributes zero entries to the feed.\n- **Same-date tiebreak:** two agents each with one update on the same date — result is ordered by agent title (e.g. `\"Alpha Agent\"` before `\"Zulu Agent\"`), not by insertion order.\n- **Missing/blank author:** an update whose `author` is `\"\"` (or omitted, cast via fixture) renders as `\"unknown\"` in the resulting entry.\n- **Newest-first overall ordering:** three agents with updates on different dates — result is strictly newest-to-oldest.\n- **Date normalization:** an update with a full ISO timestamp (e.g. `\"2026-08-07T00:00:00Z\"`) is truncated to `\"2026-08-07\"` in the output.\n- Assert `agentId`/`agentTitle` pass through unchanged so the page can link back to `/backlog/{agentId}`.\n\n### Step 3: Build the `/changelog` page\n**Files:** `app/changelog/page.tsx` (new)\n\n- Server component (`async function` default export), no client state needed — same shape as `app/library/page.tsx` / `app/backlog/[agentId]/page.tsx`.\n- Call `listChangelogEntries()` from `lib/changelog.ts`.\n- Page chrome: `<main className=\"page-wrap page-wrap-wide\">`, `page-title` = \"Changelog\", `page-subtitle` describing the combined feed.\n- Feed list: reuse the existing \"Updates\" block styling from `app/backlog/[agentId]/page.tsx` (lines ~210-235) — `<ul className=\"mb-0 mt-3 list-none space-y-4 p-0\">` with `<li className=\"border-t border-[var(--rule-soft)] pt-4 first:border-t-0 first:pt-0\">` per entry, showing:\n  - Meta line: `{entry.date} · <Link href={`/backlog/${entry.agentId}`}>{entry.agentTitle}</Link> · {entry.author}` styled `text-[13.5px] font-medium text-[var(--ink-faint)]`.\n  - Note line styled `text-[15px] leading-6 text-[var(--ink-soft)]`.\n  - Use a stable `key` combining `agentId`, `date`, and array index (dates/agents can repeat).\n- Empty state: if `entries.length === 0`, render a \"No updates yet\" message (mirror the empty-state pattern in `app/library/page.tsx`'s \"No matches yet\" section, or the single-agent empty state in `app/backlog/[agentId]/page.tsx`).\n- Design tokens only (`var(--ink)`, `var(--ink-soft)`, `var(--ink-faint)`, `var(--rule-soft)`, etc.) — no new colors/spacing values outside the existing CSS custom properties in `app/globals.css`.\n\n### Step 4: Add the \"Changelog\" nav link\n**Files:** `lib/garage-content.ts`\n\n- Add `{ href: \"/changelog\", label: \"Changelog\" }` to the `\"Explore\"` group in `navGroups`, after the `\"Backlog\"` entry. `components/portal-nav.tsx` already derives its links from `navGroups` (`navGroups.flatMap(...)`), so no changes are needed there — the new link and active-state highlighting (via `pathname.startsWith(item.href)`) will work automatically.\n\n### Step 5: Update architecture docs\n**Files:** `docs/architecture.md`\n\n- Add `/changelog` to the pages list in the architecture diagram (near `/backlog`, `/plan`) and mention `lib/changelog.ts` alongside the other `lib/` modules listed, so the doc keeps matching the shipped module layout (existing convention: this file enumerates every page + lib module).\n\n---\n\n## 🧪 Testing Strategy\n\n- **Unit:** `tests/changelog.test.ts` as described in Step 2 — run via `npm run test` (Vitest).\n- **Type/Lint:** `npm run typecheck` and `npm run lint` must pass — no `any`, follow existing type patterns (mirrors `AgentUpdate` typing conventions in `lib/backlog-meta.ts`).\n- **Build:** `npm run build` must succeed with the new `/changelog` route statically/server-rendered like the other pages.\n- **Manual:** Visit `/changelog` locally, confirm entries render newest-first, agent links navigate to `/backlog/{agentId}`, nav highlights \"Changelog\" when active, and the empty state renders correctly if the registry temporarily has zero updates (can spot-check by temporarily emptying an agent's `updates` array in a local manifest, without committing that change).\n\n## ⚠️ Risks & Considerations\n\n- **Schema currently requires `author`:** `parseUpdates` in `lib/agent-registry.ts` calls `requireString(entry, \"author\", file)`, which throws on manifests with a blank/missing author — so a real \"unknown author\" case can't occur via the registry today. The `buildChangelogFeed` fallback still needs to exist per the card's test requirement, but note in review that it's defensive/future-proofing rather than reachable through current YAML validation.\n- **\"All agents in the registry\" scope:** shipped/library agents (`AgentLibraryEntry`) have no `updates[]` field at all today. This plan sources the feed from `backlogAgents` only, since that's the only place update history lives. If the intent was to eventually track updates on shipped agents too, that would need a separate follow-up to add `updates` to `AgentLibraryEntry`/`agent-library.ts` and the shipped-manifest validation branch in `lib/agent-registry.ts` — flagging this as an open question rather than in scope here.\n- **Key uniqueness in the list:** with agents contributing multiple updates, `key` must combine agent id + date + index to stay stable and unique across re-renders.\n",
+  "checklists": [
+    {
+      "name": "📋 Implementation Steps",
+      "items": [
+        {
+          "name": "Add listChangelogEntries data function",
+          "state": "incomplete"
+        },
+        {
+          "name": "Add unit tests for the changelog data function",
+          "state": "incomplete"
+        },
+        {
+          "name": "Build the /changelog page",
+          "state": "incomplete"
+        },
+        {
+          "name": "Add Changelog link to portal nav",
+          "state": "incomplete"
+        },
+        {
+          "name": "Update architecture docs",
+          "state": "incomplete"
+        },
+        {
+          "name": "Run full check suite",
+          "state": "incomplete"
+        }
+      ]
+    }
+  ],
+  "attachments": [],
+  "actions": [
+    {
+      "date": "2026-09-03T01:44:02.815Z",
+      "type": "updateCard",
+      "descChanged": true
+    },
+    {
+      "date": "2026-09-03T01:45:04.884Z",
+      "type": "updateCard",
+      "move": "Backlog -> To Do"
+    },
+    {
+      "date": "2026-09-03T01:45:07.208Z",
+      "type": "updateCard",
+      "move": "To Do -> Doing"
+    },
+    {
+      "date": "2026-09-03T01:45:08.786Z",
+      "type": "updateCard",
+      "move": "Doing -> In Review"
+    },
+    {
+      "date": "2026-09-03T01:45:11.566Z",
+      "type": "updateCard",
+      "move": "In Review -> Planning"
+    },
+    {
+      "date": "2026-09-03T01:45:11.660Z",
+      "type": "updateCard"
+    },
+    {
+      "date": "2026-09-03T01:45:23.250Z",
+      "type": "commentCard",
+      "text": "📋 **Implementation Plan Ready**\n\nI've created a detailed implementation plan with 6 steps covering:\n- A new pure `listChangelogEntries()` data function (`lib/changelog.ts`) that flattens `updates[]` from every backlog agent into one newest-first feed, normalizing dates to `YYYY-MM-DD` and defaulting missing authors to \"unknown\"\n- Unit tests for the required edge cases (no updates, same-date tiebreak by agent name, missing author)\n- A new `/changelog` page reusing the existing Updates-list styling/tokens from `app/backlog/[agentId]/page.tsx`\n- A nav link added via `lib/garage-content.ts` (no changes needed in `portal-nav.tsx` itself), plus an architecture doc update\n\nOne scope note flagged in the card: only backlog manifests (`scoped`/`claimed`/`in_build`) carry `updates[]` today — shipped/library agents have no update history in the schema — so the feed sources from `backlogAgents`. Review the updated description and move to TODO when ready to implement!\n"
+    },
+    {
+      "date": "2026-09-03T01:47:29.504Z",
+      "type": "updateCard"
+    },
+    {
+      "date": "2026-09-03T01:47:31.984Z",
+      "type": "updateCard",
+      "descChanged": true
+    }
+  ]
+}

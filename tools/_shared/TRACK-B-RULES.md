@@ -14,6 +14,8 @@ These apply to every `tools/<tool>/PROCEDURE.md` that says "Track B". They come 
 
 **Evidence.** One file per observation, immutable, named `E-<TOOL>-NNN-<slug>.<ext>`, listed in `evidence/MANIFEST.md` with timestamp (ISO-8601, local offset), what it shows, and which test it supports. Screenshots are fine. Raw agent transcripts only when the tool exports them; never paste credentials or tokens.
 
+**Recording.** Every run is screen-recorded. The recording lives in `demos/<tool>/` and is not committed; `evidence/MANIFEST.md` lists its filename and what it covers.
+
 **Provenance label on every capability claim.** stock-native · supported-configuration · supported-extension · composition · evaluator-built · absent.
 
 **What a Track B result may say.** Which lifecycle step the tool improves, the evidence for it, its operating constraints, and whether it belongs alongside a backbone. It gets no end-to-end score and no Adopt/Fork/Build verdict. Without a paired baseline run, a result is a capability observation, not a claim that the tool is better than anything.

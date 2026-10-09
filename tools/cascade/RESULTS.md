@@ -32,7 +32,7 @@ Rule applied: Partly on rows 4, 9 or 10 rules out Adopt and keeps Fork eligible 
 ## Full record in this folder
 `SCORECARD.md` (verdict and summary) · `MATRIX.md` (every row with cost, time, human actions, evidence) · `REQUIREMENTS.md` · `FINDINGS.md` (24 numbered findings) · `SECURITY.md` · `LICENSE.md` · `DECISIONS.md` (D-1 … D-37) · `BASELINE.md` · `SETUP-LOG.md` · `evidence/` (52 files, `MANIFEST.md`).
 
-References in these files to `PLAN.md` and `RUBRIC.md` are to the v1 plan; the rubric is at `tools/_shared/RUBRIC-v1.md`.
+References in these files to `PLAN.md`, `RUBRIC.md` and `FEATURE.md` are to the v1 plan, rubric and task text, at `tools/_shared/PLAN-v1.md`, `tools/_shared/RUBRIC-v1.md` and `tools/_shared/FEATURE-v1.md`. The first attempt that was abandoned and restarted is in `appendix-first-attempt/`.
 
 ## What this evaluation cannot say
 Single runs, one task class, one repo, one evaluator. Nothing here supports claims about reliability, speed relative to another tool, team operation, or security beyond the recorded checks.

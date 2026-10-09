@@ -16,7 +16,7 @@ These are potential paths, **not confirmed product decisions**. Whether a future
 
 **Near-term evidence goal:** demonstrate a bounded, customer-derived application slice using authorized synthetic data, independently verify the delivered behavior, and record the actual operator assistance, tool contributions, elapsed time, tokens, costs, limitations, and demo outcome. Do not substitute a static mockup for functioning software.
 
-The ordered forward-evaluation register is in [comparison/FORWARD-EVALUATIONS.md](comparison/FORWARD-EVALUATIONS.md). The next candidate is **Cezar**. Its existing focused tests remain registered; a distinct customer-demo *reporting record* is in [tools/cezar/CUSTOMER-DEMO.md](tools/cezar/CUSTOMER-DEMO.md).
+The ordered forward-evaluation register is in [comparison/FORWARD-EVALUATIONS.md](comparison/FORWARD-EVALUATIONS.md). The next candidate is **Cezar**. Its existing focused tests remain registered.
 
 ## What belongs in this repository
 
@@ -48,7 +48,7 @@ Going forward, this repository is for **approved, sanitized evaluation records a
 |---|---|
 | Cascade | Historical v1 evaluation; preserve scores and documented caveats. |
 | OpenHands | Historical evidence present; scores/verdict not confirmed; extension gap. |
-| Cezar | Focused Track B procedure registered; **no committed execution evidence** as of this update. Separate customer-demo record opened, not run. |
+| Cezar | Focused Track B procedure registered; **no committed execution evidence** as of this update. |
 | Vercel Eve | Focused procedure registered; no confirmed results in this repository. |
 | Cursor Automations | Earlier focused procedure registered; outside the current ten-candidate sequence. |
 | Other forward candidates | See the ordered register; absent results are not failed tests. |

@@ -6,7 +6,7 @@ The sequence below is the required review order. Products need not play the same
 
 | Order | Candidate | Existing record in this repository | Forward evidence status |
 |---|---|---|---|
-| 1 | Cezar (Open Mercato) | Registered Track B `tools/cezar/PROCEDURE.md`; empty evidence manifest | Focused tests have no committed execution evidence; customer-derived demo has **not run** (`tools/cezar/CUSTOMER-DEMO.md`). |
+| 1 | Cezar (Open Mercato) | Registered Track B `tools/cezar/PROCEDURE.md`; empty evidence manifest | Focused tests have no committed execution evidence. |
 | 2 | Vercel Eve | Registered focused `tools/vercel-eve/PROCEDURE.md` | No confirmed results; suitability as a broader factory/backbone remains to be assessed rather than inferred from its existing Track B label. |
 | 3 | Devin | None registered here | No evidence or outcomes recorded here. |
 | 4 | Factory (Droids) | None registered here | No evidence or outcomes recorded here. |
